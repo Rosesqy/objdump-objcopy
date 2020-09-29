@@ -17,16 +17,16 @@ static void print_objdump(bfd *abfd, asection *sect, void *obj){
 	write(1,sep,strlen(sep));
 	bfd_vma addr = bfd_section_vma(abfd,sect);
 	// printf("%lx  ",addr);
-	write(1,addr,strlen(addr));
+	write(1,addr,sizeof(addr));
 	write(1,sep,strlen(sep));
 	long size = bfd_get_symtab_upper_bound(abfd);
 	// printf("%lx  ",size);
-	write(1,size,strlen(size));
+	write(1,size,sizeof(size));
 	write(1,sep,strlen(sep));
 	asymbol **loc = malloc(size);
 	long location = bfd_canonicalize_symtab(abfd, loc);
 	// printf("%lx",location);
-	write(1,location,strlen(location));
+	write(1,location,sizeof(location));
 	write(1,nextln,strlen(nextln));
 }
 
