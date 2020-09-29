@@ -15,18 +15,25 @@ static void print_objdump(bfd *abfd, asection *sect, void *obj){
 	namep = bfd_section_name(abfd,sect);
 	write(1,namep,strlen(namep));	
 	write(1,sep,strlen(sep));
+
 	bfd_vma addr = bfd_section_vma(abfd,sect);
 	// printf("%lx  ",addr);
-	write(1,(char)addr,strlen(char(addr)));
+	write(1,&addr,sizeof(addr));
 	write(1,sep,strlen(sep));
-	long size = bfd_get_symtab_upper_bound(abfd);
+
+	unsigned long size = bfd_section_size(abfd, sect);
+	write(1,&size, sizeof(size));
+	write(1,sep,strlen(sep));
+	
+	long store = bfd_get_symtab_upper_bound(abfd);
 	// printf("%lx  ",size);
-	write(1,(char)size,strlen(char(size)));
-	write(1,sep,strlen(sep));
-	asymbol **loc = malloc(size);
+	// write(1,&store,sizeof(store));
+	// write(1,sep,strlen(sep));
+	asymbol **loc = NULL;
+	loc = malloc(store);
 	long location = bfd_canonicalize_symtab(abfd, loc);
 	// printf("%lx",location);
-	write(1,(char)location,strlen(char(location)));
+	write(1,&location,sizeof(location));
 	write(1,nextln,strlen(nextln));
 }
 
