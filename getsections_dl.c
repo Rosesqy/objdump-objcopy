@@ -25,9 +25,9 @@ void run_stats(int flagn){
 	int i = 0;
 	char *fname = "stats";
 	char *flag = (flagn==0x1)? "RDTL_LAZY" :"RDTL_NOW";
-	int fd = open(fname, O_RDWR|O_CREAT|O_EXCL);
-	write(fd,"getsections_dl.c | ", 20);
-	write(fd,flag, strlen(flag));
+	//int fd = open(fname, O_RDWR|O_CREAT|O_EXCL);
+	write(1,"getsections_dl.c | ", 20);
+	write(1,flag, strlen(flag));
 	write(1,nextln, strlen(nextln));
 	do
 	{
@@ -39,10 +39,10 @@ void run_stats(int flagn){
 		i++;
 	} while (i<50);
 
-	write(fd,"Avgtime: ",10);
+	write(1,"Avgtime: ",10);
 	char *tempavg = malloc(16*sizeof(char));
 	gcvt(total/50, 5, tempavg);
-	write(fd, tempavg,strlen(tempavg));
+	write(1, tempavg,strlen(tempavg));
 	write(1,nextln, strlen(nextln));
 }
 
