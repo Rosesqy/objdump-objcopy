@@ -2,14 +2,16 @@
 #include <string.h>
 #include <fcntl.h>
 // #include <stdio.h>
-// #include "bfd.h"
-# include "object.h"
+#include "bfd.h"
+# include "objsect.h"
 
 // static char *default_target = NULL;
 
-// static char *default_target = "elf64-x86-64";
-// char *sep = "  ";
-// char *nextln = "\n";
+
+
+static char *default_target = "elf64-x86-64";
+//char *sep = "  ";
+//char *nextln = "\n";
 
 // static void print_objdump(bfd *abfd, asection *sect, void *obj){
 	

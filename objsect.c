@@ -33,7 +33,7 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	// //create a space for later temporary string
 	// char *temp = malloc(16*sizeof(char));
 	//initialize a temp charset for later use
-	char temp[16] = '0000000000000000';
+	char temp[16] = {0};
 
 	namep = bfd_section_name(abfd,sect);
 	write(1,namep,strlen(namep));	
@@ -46,19 +46,19 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	write(1,vma,strlen(vma));
 	write(1,sep,strlen(sep));
 
-	unsigned long size = bfd_section_size(abfd, sect);
+	unsigned long rawsize = bfd_section_size(abfd, sect);
 	// write(1,&size, sizeof(size));
-	char *size = long_to_string(size,temp);
+	char *size = long_to_string(rawsize,temp);
 	write(1,size,strlen(size));
 	write(1,sep,strlen(sep));
 
 	long store = bfd_get_symtab_upper_bound(abfd);
 	asymbol **loc = NULL;
 	loc = malloc(store);
-	long location = bfd_canonicalize_symtab(abfd, loc);
+	long rawlocation = bfd_canonicalize_symtab(abfd, loc);
 	// printf("%lx",location);
 	// write(1,&location,sizeof(location));
-	char *location = long_to_string(location,temp);
+	char *location = long_to_string(rawlocation,temp);
 	write(1,location,strlen(location));
 	write(1,nextln,strlen(nextln));
 }
