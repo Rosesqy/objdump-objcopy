@@ -18,25 +18,23 @@ char *long_to_string(unsigned long val, char *temp){
         
         while(val){
         	stringnow[i++] = base[val%16];
-       		val /= 16;}
-                                                                     
+       		val /= 16;
+		}
+        
         stringnow[i] = '\0';
-        //                                                                        //write(1,stringnow,strlen(stringnow));
-        //
-        //                                                                                int j = 0;
-        //                                                                                        //fill the terminator firstly
-        //                                                                                                temp[i] = '\0';
-        //                                                                                                        while(j<i){
-        //                                                                                                                        temp[j] = stringnow[i-1-j];
-        //                                                                                                                                        j++;
-        //                                                                                                                                                }
-        //
-        //                                                                                                                                                        return temp;
+        //write(1,stringnow,strlen(stringnow));
+        int j = 0;
+        //fill the terminator firstly
+        temp[i] = '\0';
+        while(j<i){
+        	temp[j] = stringnow[i-1-j];
+       		j++;
+        }
+        return temp;
 }
 
 void print_nm(bfd *abfd){
 
-	//const char *namep;
 	//initialize a temp charset for later use
 	char temp[16] = {0};
 
