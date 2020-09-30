@@ -10,18 +10,33 @@ char *tab = "\t";
 static char *nextln = "\n";
 
 char *long_to_string(unsigned long val, char *temp){
+	
 	int i = 0;
-	char *base = "0123456789abcdef";
-	while(val){
-		temp[i++] = base[val%16];
-		val /= 16;
-	}
-	return temp;
+        char *base = "0123456789abcdef";
+        char stringnow[16] = {0};
+        char *stringnow = malloc(strlen(temp));
+        
+        while(val){
+        	stringnow[i++] = base[val%16];
+       		val /= 16;}
+                                                                     
+        stringnow[i] = '\0';
+        //                                                                        //write(1,stringnow,strlen(stringnow));
+        //
+        //                                                                                int j = 0;
+        //                                                                                        //fill the terminator firstly
+        //                                                                                                temp[i] = '\0';
+        //                                                                                                        while(j<i){
+        //                                                                                                                        temp[j] = stringnow[i-1-j];
+        //                                                                                                                                        j++;
+        //                                                                                                                                                }
+        //
+        //                                                                                                                                                        return temp;
 }
 
 void print_nm(bfd *abfd){
 
-	const char *namep;
+	//const char *namep;
 	//initialize a temp charset for later use
 	char temp[16] = {0};
 
@@ -29,7 +44,7 @@ void print_nm(bfd *abfd){
 	size_t storesize = bfd_get_symtab_upper_bound(abfd);
 	//deal with error
 	if(storesize < 0){
-		bfd_perror();
+		bfd_perror(NULL);
 		return;
 	}
 	//pointer to pointers to symbols
@@ -40,16 +55,18 @@ void print_nm(bfd *abfd){
 	int symptrsnum = bfd_canonicalize_symtab(abfd, symptrs);
 	//deal with error
 	if(symptrsnum < 0){
-		bfd_perror();
+		bfd_perror(NULL);
 		return;
 	}
 	int i;
 	//for each symbol, print name and vma. "Each line of the output should print a single symbol name and the corresponding virtual memory address" 
 	//when calculate symbol vma, we need the vma of section it points to and, the value of the symbol, which is the amount of space the symbol requires
 	for(i = 0; i < symptrsnum; i++){
-		char *sname = symptrs[i]->name;
+		const char *sname = symptrs[i]->name;
 		write(1,sname, strlen(sname));
-		char *svma = long_to_string(symptrs[i]->section->vma+symptrs[i]->value);
+		write(1,sep,strlen(sep));
+		char temp[16] = {0};
+		char *svma = long_to_string(symptrs[i]->section->vma+symptrs[i]->value,temp);
 		write(1,svma, strlen(svma));
 		write(1,nextln,strlen(nextln));
 	}

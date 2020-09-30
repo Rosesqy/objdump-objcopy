@@ -15,26 +15,23 @@ char *long_to_string(unsigned long val, char *temp){
 
 	int i = 0;
 	char *base = "0123456789abcdef";
-	char stringnow[16] = {0};
-
-	// while(val){
-	// 	temp[i++] = base[val%16];
-	// 	val /= 16;
-	// }
+	//char stringnow[16] = {0};
+	char *stringnow = malloc(strlen(temp));
 
 	while(val){
 		stringnow[i++] = base[val%16];
 		val /= 16;
 	}
 
-	stringnow[16] = '\0';
+	stringnow[i] = '\0';
 	//write(1,stringnow,strlen(stringnow));
 	
-	int j;
+	int j = 0;
 	//fill the terminator firstly
-	temp[16] = '\0';
-	for(j = strlen(stringnow)-1; j >=0;j--){
-		temp[j] = stringnow[15-j];
+	temp[i] = '\0';
+	while(j<i){
+		temp[j] = stringnow[i-1-j];
+		j++;
 	}
 	
 	return temp;
@@ -44,7 +41,7 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 
 	const char *namep;
 	// //create a space for later temporary string
-	// char *temp = malloc(16*sizeof(char));
+	//char *temp = malloc(16*sizeof(char));
 	//initialize a temp charset for later use
 	char temp[16] = {0};
 
@@ -69,6 +66,7 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	// write(1,&size, sizeof(size));
 	char *size = long_to_string(rawsize,temp);
 	write(1,size,strlen(size));
+	write(1,tab,strlen(tab));
 	write(1,sep,strlen(sep));
 
 	// long store = bfd_get_symtab_upper_bound(abfd);
@@ -96,7 +94,7 @@ bool enter_objsect(char *inputf){
 
 	if (bfd_check_format(abfd, bfd_object))
 	{
-		char *hds = "Sections:\nName          	VMA      Size          Position\n";
+		char *hds = "Sections:\nName          	  VMA      Size      Position\n";
 		write(1,hds,strlen(hds));
 		bfd_map_over_sections(abfd, print_objdump, NULL);
 	}
