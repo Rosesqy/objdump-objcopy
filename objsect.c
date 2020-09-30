@@ -31,8 +31,6 @@ char *long_to_string(unsigned long val, char *temp){
 	//write(1,stringnow,strlen(stringnow));
 	
 	int j;
-	// char *stringnow = malloc(strlen(temp));
-	//char *stringnow = "0000000000000000";
 	//fill the terminator firstly
 	temp[16] = '\0';
 	for(j = strlen(stringnow)-1; j >=0;j--){

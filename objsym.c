@@ -10,10 +10,8 @@ char *tab = "\t";
 static char *nextln = "\n";
 
 char *long_to_string(unsigned long val, char *temp){
-
 	int i = 0;
 	char *base = "0123456789abcdef";
-
 	while(val){
 		temp[i++] = base[val%16];
 		val /= 16;
@@ -21,43 +19,40 @@ char *long_to_string(unsigned long val, char *temp){
 	return temp;
 }
 
-void print_nm(bfd *abfd, asection *sect, void *obj){
+void print_nm(bfd *abfd){
 
 	const char *namep;
-	// //create a space for later temporary string
-	// char *temp = malloc(16*sizeof(char));
 	//initialize a temp charset for later use
 	char temp[16] = {0};
 
-	namep = bfd_section_name(abfd,sect);
-	write(1,namep,strlen(namep));
-	if (strlen(namep) < 16){
-		write(1,tab,strlen(tab));
+	//get the number of bytes required to store a vector of pointers to asymbols for all the symbols in the BFD abfd, including a terminal NULL pointer. If there are no symbols in the BFD, then return 0. If an error occurs, return -1.
+	size_t storesize = bfd_get_symtab_upper_bound(abfd);
+	//deal with error
+	if(storesize < 0){
+		bfd_perror();
+		return;
 	}
-	write(1,sep,strlen(sep));
-
-	// bfd_vma vma = bfd_section_vma(abfd,sect);
-	// char *vma = long_to_string(bfd_section_vma(abfd,sect),temp);
-	char *vma = long_to_string(sect->vma,temp);
-	// write(1,&vma,sizeof(vma));
-	write(1,vma,strlen(vma));
-	write(1,sep,strlen(sep));
-
-	// unsigned long rawsize = bfd_section_size(abfd, sect);
-	unsigned long rawsize = sect.size;
-	// write(1,&size, sizeof(size));
-	char *size = long_to_string(rawsize,temp);
-	write(1,size,strlen(size));
-	write(1,sep,strlen(sep));
-
-	// long store = bfd_get_symtab_upper_bound(abfd);
-	// asymbol **loc = NULL;
-	// loc = malloc(store);
-	// long rawlocation = bfd_canonicalize_symtab(abfd, loc);
-	unsigned long rawlocation = sect.filepos;
-	char *location = long_to_string(rawlocation,temp);
-	write(1,location,strlen(location));
-	write(1,nextln,strlen(nextln));
+	//pointer to pointers to symbols
+	asymbol **symptrs;
+	//create a space to save the pointer to pointers
+	symptrs = malloc(storesize);
+	//Read the symbols from the BFD abfd, and fills in the vector location with pointers to the symbols and a trailing NULL. Return the actual number of symbol pointers, not including the NULL.
+	int symptrsnum = bfd_canonicalize_symtab(abfd, symptrs);
+	//deal with error
+	if(symptrsnum < 0){
+		bfd_perror();
+		return;
+	}
+	int i;
+	//for each symbol, print name and vma. "Each line of the output should print a single symbol name and the corresponding virtual memory address" 
+	//when calculate symbol vma, we need the vma of section it points to and, the value of the symbol, which is the amount of space the symbol requires
+	for(i = 0; i < symptrsnum; i++){
+		char *sname = symptrs[i]->name;
+		write(1,sname, strlen(sname));
+		char *svma = long_to_string(symptrs[i]->section->vma+symptrs[i]->value);
+		write(1,svma, strlen(svma));
+		write(1,nextln,strlen(nextln));
+	}
 }
 
 bool enter_objsym(char *inputf){
@@ -74,7 +69,7 @@ bool enter_objsym(char *inputf){
 
 	if (bfd_check_format(abfd, bfd_object))
 	{
-		bfd_map_over_sections(abfd, print_nm, NULL);
+		print_nm(abfd);
 	}
 	else{
 		char *nobject = ": the file is not recognized as a valid object file\n";
