@@ -1,12 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-// #include <stdio.h>
-//#include "bfd.h"
-# include "objsect.h"
-
-// static char *default_target = NULL;
-
+#include "objsect.h"
 
 
 //static char *default_target = "elf64-x86-64";
