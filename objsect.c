@@ -21,12 +21,18 @@ char *long_to_string(unsigned long val, char *temp){
 		val /= 16;
 	}
 
-	// char *stringnow = '0000000000000000';
-	// for(int j = 0; j<16;j++){
-	// 	stringnow[j] = temp[15-]
-	// }
+	//write(1,temp,strlen(temp));
 	
-	return temp;
+	write(1,strlen(temp),sizeof(strlen(temp)));
+	write(1,&i,sizeof(i));
+	int j;
+	char *stringnow = malloc(strlen(temp));
+	//char *stringnow = "0000000000000000";
+	for(j = strlen(temp)-1; j >=0;j--){
+		stringnow[j] = temp[15-j];
+	}
+	
+	return stringnow;
 }
 
 void print_objdump(bfd *abfd, asection *sect, void *obj){
@@ -40,6 +46,8 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	namep = bfd_section_name(abfd,sect);
 	write(1,namep,strlen(namep));
 	if (strlen(namep) < 16){
+		write(1,tab,strlen(tab));}
+	if(strlen(namep)<8){
 		write(1,tab,strlen(tab));
 	}
 	write(1,sep,strlen(sep));
@@ -52,7 +60,7 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	write(1,sep,strlen(sep));
 
 	// unsigned long rawsize = bfd_section_size(abfd, sect);
-	unsigned long rawsize = sect.size;
+	unsigned long rawsize = sect->size;
 	// write(1,&size, sizeof(size));
 	char *size = long_to_string(rawsize,temp);
 	write(1,size,strlen(size));
@@ -62,7 +70,7 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	// asymbol **loc = NULL;
 	// loc = malloc(store);
 	// long rawlocation = bfd_canonicalize_symtab(abfd, loc);
-	unsigned long rawlocation = sect.filepos;
+	unsigned long rawlocation = sect->filepos;
 	char *location = long_to_string(rawlocation,temp);
 	write(1,location,strlen(location));
 	write(1,nextln,strlen(nextln));
