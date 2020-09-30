@@ -2,14 +2,14 @@
 #include <string.h>
 #include <fcntl.h>
 // #include <stdio.h>
-#include "bfd.h"
+//#include "bfd.h"
 # include "objsect.h"
 
 // static char *default_target = NULL;
 
 
 
-static char *default_target = "elf64-x86-64";
+//static char *default_target = "elf64-x86-64";
 //char *sep = "  ";
 //char *nextln = "\n";
 
@@ -49,33 +49,42 @@ int main(int argc, char **argv){
 		char *instruct = "Usage: getsections filename\n";
 		// printf("Usage: getsections filename\n");
 		write(1,instruct,strlen(instruct));
-		return 0;
-	}
-
-	bfd_init();
-
-	bfd *abfd;
-	abfd = bfd_openr (argv[1],default_target);
-
-	if(abfd == NULL)
-	{
-		char *nfound = "File not found!\n";
-		write(1,nfound,strlen(nfound));
-		return 0;
-	}
-
-	if (bfd_check_format(abfd, bfd_object))
-	{
-		char *hds = "Sections:\nName          	VMA      Size          Position\n";
 		write(1,hds,strlen(hds));
-		bfd_map_over_sections(abfd, print_objdump, NULL);
-	}
-	else{
-		char *nobject = ": the file is not recognized as a valid object file\n";
-		write(1,argv[1],strlen(argv[1]));
-		write(1,nobject,strlen(nobject));
 		return 0;
 	}
+
+	if(enter_objsect(argv[1])){
+		write(1,'PASS',5);
+		write(1,hds,strlen(hds));
+	}else{
+		write(1,'FAIL',5);
+		write(1,hds,strlen(hds));
+	}
+
+	// bfd_init();
+
+	// bfd *abfd;
+	// abfd = bfd_openr (argv[1],default_target);
+
+	// if(abfd == NULL)
+	// {
+	// 	char *nfound = "File not found!\n";
+	// 	write(1,nfound,strlen(nfound));
+	// 	return 0;
+	// }
+
+	// if (bfd_check_format(abfd, bfd_object))
+	// {
+	// 	char *hds = "Sections:\nName          	VMA      Size          Position\n";
+	// 	write(1,hds,strlen(hds));
+	// 	bfd_map_over_sections(abfd, print_objdump, NULL);
+	// }
+	// else{
+	// 	char *nobject = ": the file is not recognized as a valid object file\n";
+	// 	write(1,argv[1],strlen(argv[1]));
+	// 	write(1,nobject,strlen(nobject));
+	// 	return 0;
+	// }
 
 	// if(bfd_check_format(file, bfd_archive))
 	// {

@@ -63,3 +63,30 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	write(1,nextln,strlen(nextln));
 }
 
+boolean enter_objsect(inputf){
+	bfd_init();
+
+	bfd *abfd;
+	abfd = bfd_openr (inputf,default_target);
+
+	if(abfd == NULL)
+	{
+		char *nfound = "File not found!\n";
+		write(1,nfound,strlen(nfound));
+		return 0;
+	}
+
+	if (bfd_check_format(abfd, bfd_object))
+	{
+		char *hds = "Sections:\nName          	VMA      Size          Position\n";
+		write(1,hds,strlen(hds));
+		bfd_map_over_sections(abfd, print_objdump, NULL);
+	}
+	else{
+		char *nobject = ": the file is not recognized as a valid object file\n";
+		write(1,inputf,strlen(inputf));
+		write(1,nobject,strlen(nobject));
+		return 0;
+	}
+}
+
