@@ -13,7 +13,7 @@ char *long_to_string(unsigned long val, char *temp){
 	
 	int i = 0;
         char *base = "0123456789abcdef";
-        char stringnow[16] = {0};
+        //char stringnow[16] = {0};
         char *stringnow = malloc(strlen(temp));
         
         while(val){
@@ -60,12 +60,13 @@ void print_nm(bfd *abfd){
 	//for each symbol, print name and vma. "Each line of the output should print a single symbol name and the corresponding virtual memory address" 
 	//when calculate symbol vma, we need the vma of section it points to and, the value of the symbol, which is the amount of space the symbol requires
 	for(i = 0; i < symptrsnum; i++){
-		const char *sname = symptrs[i]->name;
-		write(1,sname, strlen(sname));
-		write(1,sep,strlen(sep));
 		char temp[16] = {0};
 		char *svma = long_to_string(symptrs[i]->section->vma+symptrs[i]->value,temp);
 		write(1,svma, strlen(svma));
+		write(1,tab,strlen(tab));
+		const char *sname = symptrs[i]->name;
+                write(1,sname, strlen(sname));
+
 		write(1,nextln,strlen(nextln));
 	}
 }
