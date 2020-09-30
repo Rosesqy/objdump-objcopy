@@ -7,6 +7,7 @@
 
 static char *default_target = "elf64-x86-64";
 char *sep = "  ";
+char *tab = "\t";
 static char *nextln = "\n";
 
 
@@ -37,28 +38,31 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	char temp[16] = {0};
 
 	namep = bfd_section_name(abfd,sect);
-	write(1,namep,strlen(namep));	
+	write(1,namep,strlen(namep));
+	if (strlen(namep) < 16){
+		write(1,tab,strlen(tab));
+	}
 	write(1,sep,strlen(sep));
 
 	// bfd_vma vma = bfd_section_vma(abfd,sect);
-	// printf("%lx  ",vma);
-	char *vma = long_to_string(bfd_section_vma(abfd,sect),temp);
+	// char *vma = long_to_string(bfd_section_vma(abfd,sect),temp);
+	char *vma = long_to_string(sect->vma,temp);
 	// write(1,&vma,sizeof(vma));
 	write(1,vma,strlen(vma));
 	write(1,sep,strlen(sep));
 
-	unsigned long rawsize = bfd_section_size(abfd, sect);
+	// unsigned long rawsize = bfd_section_size(abfd, sect);
+	unsigned long rawsize = sect.size;
 	// write(1,&size, sizeof(size));
 	char *size = long_to_string(rawsize,temp);
 	write(1,size,strlen(size));
 	write(1,sep,strlen(sep));
 
-	long store = bfd_get_symtab_upper_bound(abfd);
-	asymbol **loc = NULL;
-	loc = malloc(store);
-	long rawlocation = bfd_canonicalize_symtab(abfd, loc);
-	// printf("%lx",location);
-	// write(1,&location,sizeof(location));
+	// long store = bfd_get_symtab_upper_bound(abfd);
+	// asymbol **loc = NULL;
+	// loc = malloc(store);
+	// long rawlocation = bfd_canonicalize_symtab(abfd, loc);
+	unsigned long rawlocation = sect.filepos;
 	char *location = long_to_string(rawlocation,temp);
 	write(1,location,strlen(location));
 	write(1,nextln,strlen(nextln));
