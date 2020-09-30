@@ -15,24 +15,31 @@ char *long_to_string(unsigned long val, char *temp){
 
 	int i = 0;
 	char *base = "0123456789abcdef";
+	char stringnow[16] = {0};
+
+	// while(val){
+	// 	temp[i++] = base[val%16];
+	// 	val /= 16;
+	// }
 
 	while(val){
-		temp[i++] = base[val%16];
+		stringnow[i++] = base[val%16];
 		val /= 16;
 	}
 
-	//write(1,temp,strlen(temp));
+	stringnow[16] = '\0';
+	//write(1,stringnow,strlen(stringnow));
 	
-	write(1,strlen(temp),sizeof(strlen(temp)));
-	write(1,&i,sizeof(i));
 	int j;
-	char *stringnow = malloc(strlen(temp));
+	// char *stringnow = malloc(strlen(temp));
 	//char *stringnow = "0000000000000000";
-	for(j = strlen(temp)-1; j >=0;j--){
-		stringnow[j] = temp[15-j];
+	//fill the terminator firstly
+	temp[16] = '\0';
+	for(j = strlen(stringnow)-1; j >=0;j--){
+		temp[j] = stringnow[15-j];
 	}
 	
-	return stringnow;
+	return temp;
 }
 
 void print_objdump(bfd *abfd, asection *sect, void *obj){
