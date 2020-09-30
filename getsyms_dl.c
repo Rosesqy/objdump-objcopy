@@ -2,28 +2,31 @@
 #include <string.h>
 #include <fcntl.h>
 #include <dlfcn.h>
+#include <stdint.h>
+#include <unistd.h>
 #include "objsym.h"
 
 static char *nextln = "\n";
 
-#define RDTSC(var)
-{                                                            
-    uint32_t var##_lo, var##_hi;
-    asm volatile ("lfence\n\trdtsc" : "=a"(var##_lo), "=d"(var##_hi));
-    var = var##_hi;
-    var <<= 32;
-    var |= var##_lo;
-}
+#define RDTSC(var)                                              \
+  {                                                             \
+    uint64_t var##_lo, var##_hi;                                \
+    asm volatile("lfence\n\trdtsc" : "=a"(var##_lo), "=d"(var##_hi));     \
+    var = var##_hi;                                             \
+    var <<= 32;                                                 \
+    var |= var##_lo;                                            \
+  }
 
 unsigned long long start, finish;
 
 void run_stats(int flagn){
 	float total = 0;
+	void *handle;
 	int i = 0;
 	char *fname = "stats";
-	char *flag = if(flagn==0x1)? "RDTL_LAZY" :"RDTL_NOW";
+	char *flag = (flagn==0x1)? "RDTL_LAZY" :"RDTL_NOW";
 	int fd = open(fname, O_RDWR|O_CREAT|O_EXCL);
-	write(fd,"getsyms_dl.c | ", 16);
+	write(fd,"getsyms_dl.c | ", 20);
 	write(fd,flag, strlen(flag));
 	write(1,nextln, strlen(nextln));
 	do
@@ -52,11 +55,11 @@ int main(int argc, char **argv){
 		write(1,nextln,strlen(nextln));
 		return 0;
 	}
-
+	void *handle;
 	const char *flag = argv[2];
 	// //set flagn to 0x1, which is RTLC_LAZY; 0x2 for NOW
-	// int flagn = 1;
-	if(strcmp(flag,"RTLD_LAZY"!= 0)){flagn = 0x2;}
+	int flagn = 0x1;
+	if(strcmp(flag,"RTLD_LAZY")!= 0){flagn = 0x2;}
 
 	RDTSC(start);
 	handle = dlopen("libobjdata.so",flagn);
