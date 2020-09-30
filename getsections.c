@@ -11,7 +11,7 @@
 
 //static char *default_target = "elf64-x86-64";
 //char *sep = "  ";
-//char *nextln = "\n";
+static char *nextln = "\n";
 
 // static void print_objdump(bfd *abfd, asection *sect, void *obj){
 	
@@ -43,22 +43,22 @@
 // }
 
 int main(int argc, char **argv){
-	char *target = default_target;
+	//char *target = default_target;
 
 	if(argc != 2){
 		char *instruct = "Usage: getsections filename\n";
 		// printf("Usage: getsections filename\n");
 		write(1,instruct,strlen(instruct));
-		write(1,hds,strlen(hds));
+		write(1,nextln,strlen(nextln));
 		return 0;
 	}
 
 	if(enter_objsect(argv[1])){
-		write(1,'PASS',5);
-		write(1,hds,strlen(hds));
+		write(1,"PASS",5);
+		write(1,nextln,strlen(nextln));
 	}else{
-		write(1,'FAIL',5);
-		write(1,hds,strlen(hds));
+		write(1,"FAIL",5);
+		write(1,nextln,strlen(nextln));
 	}
 
 	// bfd_init();

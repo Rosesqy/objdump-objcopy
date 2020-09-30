@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include "bfd.h"
 
 
 static char *default_target = "elf64-x86-64";
 char *sep = "  ";
-char *nextln = "\n";
+static char *nextln = "\n";
 
 
 char *long_to_string(unsigned long val, char *temp){
@@ -63,17 +64,17 @@ void print_objdump(bfd *abfd, asection *sect, void *obj){
 	write(1,nextln,strlen(nextln));
 }
 
-boolean enter_objsect(inputf){
+bool enter_objsect(char *inputf){
 	bfd_init();
 
 	bfd *abfd;
-	abfd = bfd_openr (inputf,default_target);
+	abfd = bfd_openr(inputf,default_target);
 
 	if(abfd == NULL)
 	{
 		char *nfound = "File not found!\n";
 		write(1,nfound,strlen(nfound));
-		return 0;
+		return false;
 	}
 
 	if (bfd_check_format(abfd, bfd_object))
@@ -86,7 +87,8 @@ boolean enter_objsect(inputf){
 		char *nobject = ": the file is not recognized as a valid object file\n";
 		write(1,inputf,strlen(inputf));
 		write(1,nobject,strlen(nobject));
-		return 0;
+		return false;
 	}
+	return true;
 }
 
