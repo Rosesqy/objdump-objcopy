@@ -5,11 +5,11 @@
 #include "bfd.h"
 
 static char *default_target = "elf64-x86-64";
-char *sep = "  ";
-char *tab = "\t";
+static char *sep = "  ";
+static char *tab = "\t";
 static char *nextln = "\n";
 
-char *long_to_string(unsigned long val, char *temp){
+static char *long_to_string(unsigned long val, char *temp){
 	
 	int i = 0;
         char *base = "0123456789abcdef";
