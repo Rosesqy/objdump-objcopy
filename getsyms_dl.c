@@ -24,7 +24,7 @@ void run_stats(int flagn){
 	void *handle;
 	int i = 0;
 	char *fname = "stats";
-	char *flag = (flagn==0x1)? "RDTL_LAZY" :"RDTL_NOW";
+	char *flag = (flagn==0x1)? "RTLD_LAZY" :"RTLD_NOW";
 	//int fd = open(fname, O_RDWR|O_CREAT|O_EXCL);
 	write(1,"getsyms_dl.c | ", 16);
 	write(1,flag, strlen(flag));

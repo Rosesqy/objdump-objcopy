@@ -24,7 +24,7 @@ void run_stats(int flagn){
 	void *handle;
 	int i = 0;
 	char *fname = "stats";
-	char *flag = (flagn==0x1)? "RDTL_LAZY" :"RDTL_NOW";
+	char *flag = (flagn==0x1)? "RTLD_LAZY" :"RTLD_NOW";
 	//int fd = open(fname, O_RDWR|O_CREAT|O_EXCL);
 	write(1,"getsections_dl.c | ", 20);
 	write(1,flag, strlen(flag));
@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 	}
 	void *handle;
 	const char *flag = argv[2];
-	// //set flagn to 0x1, which is RTLC_LAZY; 0x2 for NOW
+	// //set flagn to 0x1, which is RTLD_LAZY; 0x2 for NOW
 	int flagn = 0x1;
 	if(strcmp(flag,"RTLD_LAZY")!= 0){flagn = 0x2;}
 

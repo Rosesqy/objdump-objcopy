@@ -13,26 +13,27 @@ asection enter_objcopy(char *inputf){
 	bfd_init();
 	bfd *abfd;
 	abfd = bfd_openr(inputf,default_target);
+	asection *sect = NULL;
 
 	if(abfd == NULL)
 	{
 		char *nfound = "File not found!\n";
 		write(1,nfound,strlen(nfound));
-		return false;
+		return *sect;
 	}
 
 	if (bfd_check_format(abfd, bfd_object))
 	{
 		//get all the .text sections
-		asection *sect = bfd_get_section_by_name(abfd, ".text");
-		return sect;
+		sect = bfd_get_section_by_name(abfd, ".text");
+		//return sect;
 	}
 	else{
 		char *nobject = ": the file is not recognized as a valid object file\n";
 		write(1,inputf,strlen(inputf));
 		write(1,nobject,strlen(nobject));
-		return false;
+		//return NULL;
 	}
-	return true;
+	return *sect;
 }
 

@@ -13,12 +13,21 @@ int main(int argc, char **argv){
 		char *instruct = "Usage: getsections filename\n";
 		write(1,instruct,strlen(instruct));
 		return 0;
-	}
-
-	asection *sect = enter_objcopy(argv[1]);
-
+	}	
+	
+	
+	//asection *sect;
+	//*sect = enter_objcopy(argv[1]);
+	
+	bfd_init();
+	bfd *abfd = bfd_openr(argv[1],target);
+	asection *sect = bfd_get_section_by_name(abfd,".text");
+	//write(1,"*sect",6);
 	if(sect){
-		size_t size = sect->size;
+		//write(1,"sect",5);
+		//bfd *abfd = bfd_openr(argv[1],target);
+		//size_t size = sect->size;
+		size_t size = bfd_section_size(abfd,sect);
 		char text[size];
 		bfd_get_section_contents(abfd, sect, text, 0, size);
 		int fd = open("text-output", O_RDWR|O_CREAT);
